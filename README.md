@@ -13,7 +13,7 @@
 
 ### Before installation
 2 things need to be done in the BIOS before installing Linux:
-* Disable *Fast Boot* to allow Linux to boot.
+* Disable *Secure Boot* to allow Linux to boot.
 * Change the SATA Mode to `AHCI` to allow Linux to detect the NVMe SSD.
 
 ### Installation
