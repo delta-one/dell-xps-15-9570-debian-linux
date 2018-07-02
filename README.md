@@ -27,6 +27,8 @@ The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-packag
 
 
 ### Video card
+If the graphics in the command line (`CTRL+ALT+F1` e.g.) look a bit strange (wrong pixels etc.), then the kernel parameter `i915.modeset=1` might be helpful.
+
 The nouveau-driver works, but the dGPU needs quite a lot of power. Will work on getting `bumblebee` to work.
 
 ### Battery
