@@ -20,11 +20,15 @@
 If you need Wifi during installtion, you need to grab an image with non-free firmware, since the official Debian-image doesn't contain the driver for the Killer 1535-chip. During the installation the installer will complain about missing files for the Wifi-firmware, but this warning can be ignored.
 
 ### After installation
-When you boot the first time, press `e` in Grub and add the kernel-parameter `nouveau.modeset=0` before you boot. This will prevent CPU-lockups when running `lspci` e.g. or when trying to logout or reboot. I'd also strongly recommend to add this parameter permanently in `/etc/default/grub` (don't forget `update-grub2` afterwards).
+When you boot the first time, press `e` in Grub and add the kernel-parameter `nouveau.modeset=0` before you boot. This will prevent CPU-lockups when e.g. running `lspci` or trying to logout/reboot. I'd also strongly recommend to add this parameter permanently in `/etc/default/grub` (don't forget `update-grub` afterwards).
+
+### Kernel
+In case you want to compile your own kernel, you can use [my kernel-configs](kernel-config). Depending on what you do, you might have to adjust the configs slightly, but they should provide a working base-configuration and can be compiled with the [vanilla kernel-sources](https://www.kernel.org/).
+
+If you want to figure out by yourself which modules to include, run a distro-kernel for a while and simply record all the modules you are using with [modprobed-db](https://github.com/graysky2/modprobed-db) for example. You can then take the distro-configuration and run `make localmodconfig` while proving the module-list from *modprobed-db*.
 
 ### Wifi
 The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. At times the connection is a bit slow though. I might switch to an Intel-chip.
-
 
 ### Video card
 The nouveau-driver works, but the dGPU needs quite a lot of power. Will work on getting `bumblebee` to work.
