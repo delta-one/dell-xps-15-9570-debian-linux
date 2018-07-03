@@ -34,7 +34,14 @@ The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-packag
 [upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). A temporary solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7`, then the AC adapter should get recognized again and your power settings should be applied accordingly.
 
 ### Video card
-The nouveau-driver works, but the dGPU needs quite a lot of power. Will work on getting `bumblebee` to work.
+The nouveau-driver works, but the dGPU needs quite a lot of power even when it's idle. One alternative is to install [bumblebee](https://wiki.debian.org/Bumblebee) to switch off the dGPU, when it's not needed.<br>
+While installing went without any problems, I haven't been able to get the dGPU working with `optirun`:
+```
+[ERROR]Cannot access secondary GPU - error: Could not enable discrete graphics card
+
+[ERROR]Aborting because fallback start is disabled.
+```
+I tried several kernel parameters like `pcie_port_pm=off`, but I'm always getting the same result. The only good news is, that the card is turned off and not using any power. Since I'm not really using the dGPU anyway, I can live with that, but I might investigate the issue again in the future.
 
 ### Battery
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 94 Whr.
