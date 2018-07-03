@@ -30,6 +30,9 @@ If you want to figure out by yourself which modules to include, run a distro-ker
 ### Wifi
 The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. At times the connection is a bit slow though. I might switch to an Intel-chip.
 
+### Power Management
+[upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). A temporary solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7`, then the AC adapter should get recognized again and your power settings should be applied accordingly.
+
 ### Video card
 The nouveau-driver works, but the dGPU needs quite a lot of power. Will work on getting `bumblebee` to work.
 
