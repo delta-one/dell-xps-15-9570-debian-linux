@@ -28,8 +28,8 @@ In case you want to compile your own kernel, you can use [my kernel-configs](ker
 
 If you only want to include those modules that you are really using, run a distro-kernel for a while and simply record all the modules you are using with [modprobed-db](https://github.com/graysky2/modprobed-db) for example. You can then take the distro-configuration and run `make localmodconfig` while proving the module-list from *modprobed-db*.
 
-### Wifi
-The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware.
+### Wifi + Bluetooth
+The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.
 
 ### Power Management
 [upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8-1`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). One solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7-2`, then the AC adapter should get recognized again and your power settings should be applied accordingly. Alternatively you can stay on `0.99.8-1` and follow the advice in [this bugreport](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=902644#24).
@@ -56,6 +56,3 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 
 ### Sound
 Sound should work out of the box. I haven't really tested the microphone yet though.
-
-### Bluetooth
-Worked out of the box.
