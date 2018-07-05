@@ -32,7 +32,10 @@ If you only want to include those modules that you are really using, run a distr
 The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.
 
 ### Power Management
-[upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8-1`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). One solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7-2`, then the AC adapter should get recognized again and your power settings should be applied accordingly. Alternatively you can stay on `0.99.8-1` and follow the advice in [this bugreport](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=902644#24).
+~~[upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8-1`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). One solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7-2`, then the AC adapter should get recognized again and your power settings should be applied accordingly. Alternatively you can stay on `0.99.8-1` and follow the advice in [this bugreport](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=902644#24).~~ Fixed in *upower 0.99.8-2*.
+
+### Suspend
+Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
 The nouveau-driver works, but the dGPU needs some power even when it's idle. One alternative is to install [bumblebee](https://wiki.debian.org/Bumblebee) to switch off the dGPU, when it's not needed.<br>
@@ -52,7 +55,7 @@ The touchpad should work out of the box. Which one of the packages `xserver-xorg
 
 ### Fn-keys
 This might again depend on your DE. In KDE Plasma the keys for volume, brightness, search and screen worked out of the box, whereas I had to configure the music-player keys in the settings.<br>
-**Tip:** `Fn+Insert` puts the computer in suspend-mode.
+**Tip:** `Fn+Insert` puts the computer in suspend-mode. `Fn+F7` turns off the screen and mutes the computer (though that option has to be activated in the BIOS).
 
 ### Sound
 Sound should work out of the box. I haven't really tested the microphone yet though.
