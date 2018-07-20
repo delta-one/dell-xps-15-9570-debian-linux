@@ -59,3 +59,6 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 
 ### Sound
 Sound should work out of the box. I haven't really tested the microphone yet though.
+
+### BIOS update
+Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update. 
