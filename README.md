@@ -18,7 +18,7 @@
 * Change Fastboot to `Thorough` in *POST Behaviour*.
 
 ### Installation
-If you need Wifi during installtion, you need to grab an image with non-free firmware, since the official Debian-image doesn't contain the driver for the Killer 1535-chip. During the installation the installer will complain about missing files for the Wifi-firmware, but this warning can be ignored.
+If you need Wifi during installtion, you need to grab an image with non-free firmware, since the official Debian-image doesn't contain the driver for the Killer 1535-chip (or maybe another chip if you have switched). During the installation the installer will complain about missing files for the Wifi-firmware, but this warning can be ignored.
 
 ### After installation
 If you run into CPU lockups when e.g. running `lspci` or when your computer won't restart/successfully logout, you can add the kernel parameter `nouveau.modeset=0`, which should fix these issues.
@@ -29,7 +29,9 @@ In case you want to compile your own kernel, you can use [my kernel-configs](ker
 If you only want to include those modules that you are really using, run a distro-kernel for a while and simply record all the modules you are using with [modprobed-db](https://github.com/graysky2/modprobed-db) for example. You can then take the distro-configuration and run `make localmodconfig` while proving the module-list from *modprobed-db*.
 
 ### Wifi + Bluetooth
-The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.
+The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.<br>
+While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The firmware for this card is not in the Debian archives yet,
+so you need to copy it manually into `/lib/firmware` (the Wifi-firmware) and `/lib/firmware/intel` (the Bluetooth-firmware). The details are in [this bug-report](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=899101). If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). I left the modules for the Killer-card in the kernel-config in case I need to switch back.
 
 ### Power Management
 ~~[upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8-1`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). One solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7-2`, then the AC adapter should get recognized again and your power settings should be applied accordingly. Alternatively you can stay on `0.99.8-1` and follow the advice in [this bugreport](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=902644#24).~~ Fixed in *upower 0.99.8-2*.
@@ -61,4 +63,4 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 Sound should work out of the box. I haven't really tested the microphone yet though.
 
 ### BIOS update
-Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update. 
+Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
