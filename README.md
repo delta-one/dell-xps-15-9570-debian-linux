@@ -35,25 +35,44 @@ While the speed of the Killer-chip was nothing to complain about, I saw a lot of
 so you need to copy it manually into `/lib/firmware` (the Wifi-firmware) and `/lib/firmware/intel` (the Bluetooth-firmware). The details are in [this bug-report](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=899101).~~ If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, that works with both chipsets. All future kernel-configs will only work with the Intel-chip.
 
 ### Power Management
-~~[upower](https://packages.debian.org/sid/upower) has a bug in version `0.99.8-1`, which prevents recognizing if the AC adapter gets plugged in or out (this affects KDE Plasma, Gnome and possibly even more desktop environments). One solution is to downgrade [upower](https://snapshot.debian.org/package/upower/0.99.7-2/#upower_0.99.7-2) and [libupower-glib3](https://snapshot.debian.org/package/upower/0.99.7-2/#libupower-glib3_0.99.7-2) to version `0.99.7-2`, then the AC adapter should get recognized again and your power settings should be applied accordingly. Alternatively you can stay on `0.99.8-1` and follow the advice in [this bugreport](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=902644#24).~~ Fixed in *upower 0.99.8-2*.
-
 Dell removed the S3 sleep-state with BIOS 1.3.1. If you want to use S3, you need to stay on BIOS 1.2.2.
 
 ### Suspend
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-The nouveau-driver works, but the dGPU needs some power even when it's idle. One alternative is to install [bumblebee](https://wiki.debian.org/Bumblebee) to switch off the dGPU, when it's not needed.<br>
-While installing went without any problems, I haven't been able to get the dGPU working with `optirun`:
-```
-[ERROR]Cannot access secondary GPU - error: Could not enable discrete graphics card
+The integrated Intel-card works out of the box - a bit trickier was the installtion of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA-card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
 
-[ERROR]Aborting because fallback start is disabled.
+* Install `bumblebee` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
+* Deinstall `xserver-xorg-video-nouveau`.
+* Install `xserver-xorg-input-mouse` and `libgl1-mesa-glx`.
+* Add the following kernel-parameter to your configuration: `pcie_port_pm=on`
+* Edit `/etc/bumblebee/bumblebee.conf` by setting the `Driver` to `nvidia` and by setting `PMMethod` to `none` in the `[driver-nvidia]`-section.
+* Add the following snippet to `/etc/bumblebee/xorg.conf.nvidia`:
 ```
-I tried several kernel parameters like `pcie_port_pm=off`, but I'm always getting the same result. The only good news is, that the card is turned off and not using any power. Since I'm not really using the dGPU anyway, I can live with that for now, but I might investigate the issue again in the future.
+Section "Screen"
+    Identifier "Default Screen"
+    Device "DiscreteNvidia"
+EndSection
+```
+* If you are using TLP, you need to blacklist the discrete NVIDIA-card by adding/uncommenting the following line in `/etc/default/tlp`:
+```
+RUNTIME_PM_BLACKLIST="01:00.0"
+```
+(Double-check the address with `lspci`.)
+* If you are using `powertop`, you might have to disable/blacklist the card there as well.
+
+That should enable the card when running a command with `optirun`:
+```
+$ glxinfo|grep "OpenGL renderer"
+OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
+$ optirun glxinfo|grep "OpenGL renderer"
+OpenGL renderer string: GeForce GTX 1050 Ti with Max-Q Design/PCIe/SSE2
+```
+
 
 ### Battery
-My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 94 Whr.
+My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
 
 ### Touchpad
 The touchpad should work out of the box. Which one of the packages `xserver-xorg-input-libinput` and `xserver-xorg-input-synaptics` you need (or possibly both), might depend on your desktop environment. Configuring the touchpad also depends on your DE. In KDE Plasma the touchpad can be configured in the system-settings (mouse-click emulation, gestures, multitouch etc.).
