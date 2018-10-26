@@ -65,4 +65,7 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 Sound should work out of the box. I haven't really tested the microphone yet though.
 
 ### BIOS update
-Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
+There are 2 ways to update the BIOS:
+
+1. Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
+2. The XPS 15 supports [LVFS](https://fwupd.org/) (Linux Vendor Firmware Service) and thus updates can be installed with `fwupd`. A short tutorial can be found [here](https://wiki.archlinux.org/index.php/Fwupd).
