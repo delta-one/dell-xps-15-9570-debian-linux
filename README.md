@@ -25,14 +25,13 @@ If you run into CPU lockups when e.g. running `lspci` or when your computer won'
 
 ### Kernel
 In case you want to compile your own kernel, you can use [my kernel-configs](kernel-config) as a base. Depending on what you do, you might have to adjust the configs slightly, but they should provide a working base-configuration and can be used with the [vanilla kernel-sources](https://www.kernel.org/). <br>
-**Note:** I have switched the Wifi-chip from the Killer 1535 to an Intel 9260 chip and I'm not using the Nouveau driver, but the proprietary one from Nvidia.
+**Note:** I have switched the Wifi-chip from the Killer 1535 to an Intel 9260-chip and I'm not using the Nouveau driver, but the proprietary one from NVIDIA.
 
 If you only want to include those modules that you are really using, run a distro-kernel for a while and simply record all the modules you are using with [modprobed-db](https://github.com/graysky2/modprobed-db) for example. You can then take the distro-configuration and run `make localmodconfig` while proving the module-list from *modprobed-db*.
 
 ### Wifi + Bluetooth
 The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.<br>
-While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The drivers for this card are in the `firmware-iwlwifi`-package. ~~not in the Debian archives yet,
-so you need to copy it manually into `/lib/firmware` (the Wifi-firmware) and `/lib/firmware/intel` (the Bluetooth-firmware). The details are in [this bug-report](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=899101).~~ If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, that works with both chipsets. All future kernel-configs will only work with the Intel-chip.
+While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The drivers for this card are in the `firmware-iwlwifi`-package. If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, that works with both chipsets. All future kernel-configs will only work with the Intel-chip.
 
 ### Power Management
 Dell removed the S3 sleep-state with BIOS 1.3.1. If you want to use S3, you need to stay on BIOS 1.2.2.
@@ -41,7 +40,7 @@ Dell removed the S3 sleep-state with BIOS 1.3.1. If you want to use S3, you need
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-The integrated Intel-card works out of the box - a bit trickier was the installtion of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA-card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
+The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA-card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
 
 * Install `bumblebee` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
 * Deinstall `xserver-xorg-video-nouveau`.
