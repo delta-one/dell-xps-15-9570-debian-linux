@@ -42,9 +42,9 @@ Suspend works out of the box. Unfortunately there is no indicator, if the comput
 ### Video card
 The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA-card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
 
-* Install `bumblebee` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
+* Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
 * Deinstall `xserver-xorg-video-nouveau`.
-* Install `xserver-xorg-input-mouse` and `libgl1-mesa-glx`.
+* Install `xserver-xorg-input-mouse`.
 * Add the following kernel-parameter to your configuration: `pcie_port_pm=on`
 * Edit `/etc/bumblebee/bumblebee.conf` by setting the `Driver` to `nvidia` and by setting `PMMethod` to `none` in the `[driver-nvidia]`-section.
 * Add the following snippet to `/etc/bumblebee/xorg.conf.nvidia`:
@@ -54,12 +54,11 @@ Section "Screen"
     Device "DiscreteNvidia"
 EndSection
 ```
-* If you are using TLP, you need to blacklist the discrete NVIDIA-card by adding/uncommenting the following line in `/etc/default/tlp`:
+* If you are using *TLP*, you might need to blacklist the discrete NVIDIA-card by adding/uncommenting the following line in `/etc/default/tlp`:
 ```
 RUNTIME_PM_BLACKLIST="01:00.0"
 ```
-(Double-check the address with `lspci`.)
-* If you are using `powertop`, you might have to disable/blacklist the card there as well.
+Double-check the address with `lspci`. Similarly, if you are using *powertop*, you might have to disable/blacklist the card there as well.
 
 That should enable the card when running a command with `optirun`:
 ```
@@ -68,7 +67,7 @@ OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
 $ optirun glxinfo|grep "OpenGL renderer"
 OpenGL renderer string: GeForce GTX 1050 Ti with Max-Q Design/PCIe/SSE2
 ```
-
+It's possible you might have to install additional packages like `libgl1-mesa-glx`.
 
 ### Battery
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
