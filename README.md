@@ -34,7 +34,7 @@ The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-packag
 While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The drivers for this card are in the `firmware-iwlwifi`-package. If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, that works with both chipsets. All future kernel-configs will only work with the Intel-chip.
 
 ### Power Management
-Dell removed the S3 sleep-state with BIOS 1.3.1. If you want to use S3, you need to stay on BIOS 1.2.2.
+Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need to stay on BIOS 1.2.2.
 
 ### Suspend
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
@@ -87,6 +87,16 @@ There are 2 ways to update the BIOS:
 
 1. Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
 2. The XPS 15 supports [LVFS](https://fwupd.org/) (Linux Vendor Firmware Service) and thus updates can be installed with `fwupd`. A short tutorial can be found [here](https://wiki.archlinux.org/index.php/Fwupd).
+
+Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
+* [1.6.0](https://www.dell.com/support/home/uk/en/ukdhs1/drivers/driversdetails?driverId=DDNHT&osCode=WT64A&productCode=xps-15-9570-laptop)
+* [1.5.0](https://www.dell.com/support/home/uk/en/ukdhs1/drivers/driversdetails?driverid=5g45w)
+* [1.4.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=n54j5)
+* [1.3.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=82mk9)
+* [1.3.0](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=9d1j8)
+* [1.2.2](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=rvxyr)
+* [1.1.4](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=r8d1d)
+
 
 ### Undervolting
 [Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.125V for the CPU and -0.075V for the GPU.
