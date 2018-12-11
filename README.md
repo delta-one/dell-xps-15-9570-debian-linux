@@ -79,6 +79,56 @@ The touchpad should work out of the box. Which one of the packages `xserver-xorg
 This might again depend on your DE. In KDE Plasma the keys for volume, brightness, search and screen worked out of the box, whereas I had to configure the music-player keys in the settings.<br>
 **Tip:** `Fn+Insert` puts the computer in suspend-mode. `Fn+F7` turns off the screen and mutes the computer (though that option has to be activated in the BIOS).
 
+### Fan control
+The BIOS fan control is a bit too trigger-happy for my taste, i.e. the fan is running too often at low temperatures. Luckily you can set up your own fan control though it requires some configuration:
+
+1. You need to enable the kernel module `I8K`.
+2. Install `i8kutils`.
+3. `i8kutils` installs a sample confuration at `/etc/i8kmon.conf`, which can be adjusted. My configuration file looks like this:
+
+
+```
+# Sample i8kmon configuration file (/etc/i8kmon.conf, ~/.i8kmon).
+
+# External program to control the fans
+set config(i8kfan)      /usr/bin/i8kfan
+
+# Report status on stdout, override with --verbose option
+set config(verbose)     0
+
+# Status check timeout (seconds), override with --timeout option
+set config(timeout)     2
+
+# Temperature display unit (C/F), override with --unit option
+set config(unit)        C
+
+# Temperature threshold at which the temperature is displayed in red
+set config(t_high)      80
+
+# Minimum expected fan speed
+#set config(min_speed)   2000
+
+# Temperature thresholds: {fan_speeds low_ac high_ac low_batt high_batt}
+# These were tested on the I8000. If you have a different Dell laptop model
+# you should check the BIOS temperature monitoring and set the appropriate
+# thresholds here. In doubt start with low values and gradually rise them
+# until the fans are not always on when the cpu is idle.
+set config(0) {{0 0} -1 55 -1 55}
+set config(1) {{0 1} 50 60 50 60}
+set config(2) {{1 1} 55 75 55 75}
+set config(3) {{2 2} 70 128 70 128}
+
+# Speed values are set here to avoid i8kmon probe them at every time it starts.
+#set status(leftspeed)  "0 1000 2000 3000"
+#set status(rightspeed) "0 1000 2000 3000"
+
+# end of file
+```
+4. Depending on your usage and preferences, you might have to adjust the lines starting with `set config(0)` and specify at which temperatures which fan shall be active and at what speed.
+5. Unfortunately the `i8k`-package was not designed for the XPS 15 9570 originally, so the kernel module needs to be force-loaded: `sudo modprobe i8k force=1`
+6. Even if the daemon is running, the BIOS will still override it. Therefore the BIOS control must be disabled. An easy way to do that is using the tool [dell-bios-fan-control](https://github.com/TomFreudenberg/dell-bios-fan-control). After installing it the BIOS control can be disabled with `dell-bios-fan-control 0`.
+7. Start the `i8k`-daemon with `sudo service i8kmon start` and enjoy more silence.
+
 ### Sound
 Sound should work out of the box. I haven't really tested the microphone yet though.
 
