@@ -1,4 +1,4 @@
-# Dell XPS 15 9570
+# Debian Linux on the Dell XPS 15 9570
 
 ***Disclaimer:*** *I'm using Debian Unstable, so some aspects might not apply to your distribution.*
 
@@ -6,7 +6,7 @@
 * CPU: Intel® Core™ i7-8750H
 * RAM: 16 GB
 * HDD: 512 GB
-* Video card: NVIDIA® GeForce® GTX 1050Ti
+* Video card: NVIDIA® GeForce® GTX 1050 Ti
 * Screen: FHD non-touch
 * WIFI: Killer 1535
 * Battery: 97 Whr
@@ -36,11 +36,10 @@ While the speed of the Killer-chip was nothing to complain about, I saw a lot of
 ### Power Management
 Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need to stay on BIOS 1.2.2.
 
-### Suspend
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA-card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
+The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
 
 * Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
 * Deinstall `xserver-xorg-video-nouveau`.
@@ -126,7 +125,7 @@ set config(3) {{2 2} 70 128 70 128}
 ```
 4. Depending on your usage and preferences, you might have to adjust the lines starting with `set config(0)` and specify at which temperatures which fan shall be active and at what speed.
 5. Unfortunately the `i8k`-package was not designed for the XPS 15 9570 originally, so the kernel module needs to be force-loaded: `sudo modprobe i8k force=1`
-6. Even if the daemon is running, the BIOS will still override it. Therefore the BIOS control must be disabled. An easy way to do that is using the tool [dell-bios-fan-control](https://github.com/TomFreudenberg/dell-bios-fan-control). After installing it the BIOS control can be disabled with `dell-bios-fan-control 0`.
+6. Even if the daemon is running, the BIOS will still override it. Therefore the BIOS control must be disabled. An easy way to do that is using the tool [dell-bios-fan-control](https://github.com/TomFreudenberg/dell-bios-fan-control). After installing it the BIOS control can be disabled with `sudo dell-bios-fan-control 0`.
 7. Start the `i8k`-daemon with `sudo service i8kmon start` and enjoy more silence.
 
 ### Sound
