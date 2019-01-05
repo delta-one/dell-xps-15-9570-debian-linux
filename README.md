@@ -68,6 +68,8 @@ OpenGL renderer string: GeForce GTX 1050 Ti with Max-Q Design/PCIe/SSE2
 ```
 It's possible you might have to install additional packages like `libgl1-mesa-glx`.
 
+**Note:** The NVIDIA card is now permanently on, thus drawing some power.
+
 ### Battery
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
 
@@ -134,7 +136,7 @@ Sound should work out of the box. I haven't really tested the microphone yet tho
 ### BIOS update
 There are 2 ways to update the BIOS:
 
-1. Format a USB-drive with FAT32, download and copy the BIOS-file from the Dell support page (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
+1. Format a USB-drive with FAT32, download and copy the BIOS-file from the [Dell support page](https://www.dell.com/support/home/us/en/19/product-support/product/xps-15-9570-laptop/drivers) (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
 2. The XPS 15 supports [LVFS](https://fwupd.org/) (Linux Vendor Firmware Service) and thus updates can be installed with `fwupd`. A short tutorial can be found [here](https://github.com/hughsie/fwupd#basic-usage-flow-command-line).
 
 Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
