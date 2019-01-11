@@ -1,10 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 4.19.13 Kernel Configuration
+# Linux/x86 4.19.14 Kernel Configuration
 #
 
 #
-# Compiler: gcc (Debian 8.2.0-13) 8.2.0
+# Compiler: gcc (Debian 8.2.0-14) 8.2.0
 #
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=80200
@@ -4002,6 +4002,7 @@ CONFIG_UCSI_ACPI=m
 # USB Type-C Alternate Mode drivers
 #
 # CONFIG_TYPEC_DP_ALTMODE is not set
+# CONFIG_USB_ROLE_SWITCH is not set
 CONFIG_USB_LED_TRIG=y
 # CONFIG_USB_ULPI_BUS is not set
 # CONFIG_UWB is not set
