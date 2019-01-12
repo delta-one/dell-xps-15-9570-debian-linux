@@ -140,6 +140,7 @@ There are 2 ways to update the BIOS:
 2. The XPS 15 supports [LVFS](https://fwupd.org/) (Linux Vendor Firmware Service) and thus updates can be installed with `fwupd`. A short tutorial can be found [here](https://github.com/hughsie/fwupd#basic-usage-flow-command-line).
 
 Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
+* [1.7.0](https://www.dell.com/support/home/us/en/19/drivers/driversdetails?driverId=1WN0H&osCode=WT64A&productCode=xps-15-9570-laptop)
 * [1.6.0](https://www.dell.com/support/home/uk/en/ukdhs1/drivers/driversdetails?driverId=DDNHT&osCode=WT64A&productCode=xps-15-9570-laptop)
 * [1.5.0](https://www.dell.com/support/home/uk/en/ukdhs1/drivers/driversdetails?driverid=5g45w)
 * [1.4.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=n54j5)
