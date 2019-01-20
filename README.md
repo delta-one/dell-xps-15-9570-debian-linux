@@ -81,6 +81,8 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 **Tip:** `Fn+Insert` puts the computer in suspend-mode. `Fn+F7` turns off the screen and mutes the computer (though that option has to be activated in the BIOS).
 
 ### Fan control
+**INFO: This does not work with BIOS 1.7.0, since the BIOS fan control cannot be overriden atm. You need to stay on BIOS 1.6.0 or lower, if you want a custom fan control.**
+
 The BIOS fan control is a bit too trigger-happy for my taste, i.e. the fan is running too often at low temperatures. Luckily you can set up your own fan control though it requires some configuration:
 
 1. You need to enable the kernel module `I8K`.
@@ -136,8 +138,8 @@ Sound should work out of the box. I haven't really tested the microphone yet tho
 ### BIOS update
 There are 2 ways to update the BIOS:
 
-1. Format a USB-drive with FAT32, download and copy the BIOS-file from the [Dell support page](https://www.dell.com/support/home/us/en/19/product-support/product/xps-15-9570-laptop/drivers) (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
-2. The XPS 15 supports [LVFS](https://fwupd.org/) (Linux Vendor Firmware Service) and thus updates can be installed with `fwupd`. A short tutorial can be found [here](https://github.com/hughsie/fwupd#basic-usage-flow-command-line).
+1. The XPS 15 supports [LVFS](https://fwupd.org/) (Linux Vendor Firmware Service) and thus updates can be installed with `fwupd`. A short tutorial can be found [here](https://github.com/hughsie/fwupd#basic-usage-flow-command-line).
+2. Format a USB-drive with FAT32, download and copy the BIOS-file from the [Dell support page](https://www.dell.com/support/home/us/en/19/product-support/product/xps-15-9570-laptop/drivers) (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
 
 Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
 * [1.7.0](https://www.dell.com/support/home/us/en/19/drivers/driversdetails?driverId=1WN0H&osCode=WT64A&productCode=xps-15-9570-laptop)
