@@ -81,7 +81,7 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 **Tip:** `Fn+Insert` puts the computer in suspend-mode. `Fn+F7` turns off the screen and mutes the computer (though that option has to be activated in the BIOS).
 
 ### Fan control
-**INFO: This does not work with BIOS 1.7.0, since the BIOS fan control cannot be overriden atm. You need to stay on BIOS 1.6.0 or lower, if you want a custom fan control.**
+**INFO: This does not work with BIOS 1.7.0 or higher, since the BIOS fan control cannot be overriden at the moment. You need to stay on BIOS 1.6.0 or lower, if you want this kind of custom fan control.**
 
 The BIOS fan control is a bit too trigger-happy for my taste, i.e. the fan is running too often at low temperatures. Luckily you can set up your own fan control though it requires some configuration:
 
