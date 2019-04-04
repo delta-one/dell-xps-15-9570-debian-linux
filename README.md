@@ -41,36 +41,106 @@ Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me:
+The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
 * Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
-* Deinstall `xserver-xorg-video-nouveau`.
-* Install `xserver-xorg-input-mouse`.
-* Add the following kernel-parameter to your configuration: `pcie_port_pm=on`
-* Edit `/etc/bumblebee/bumblebee.conf` by setting the `Driver` to `nvidia` and by setting `PMMethod` to `none` in the `[driver-nvidia]`-section.
-* Add the following snippet to `/etc/bumblebee/xorg.conf.nvidia`:
+* Edit `/etc/bumblebee/bumblebee.conf` and set `Driver` to `nvidia` and `PMMethod` to `none` in the `[driver-nvidia]`-section.
+* Create the file `/etc/tmpfiles.d/nvidia_pm.conf` and add the following to allow the GPU to poweroff on boot:
 ```
-Section "Screen"
-    Identifier "Default Screen"
-    Device "DiscreteNvidia"
+w /sys/bus/pci/devices/0000:01:00.0/power/control - - - - auto
+```
+* Create the file `/etc/X11/xorg.conf.d/01-noautogpu.conf` and add the following:
+```
+Section "ServerFlags"
+    Option "AutoAddGPU" "off"
 EndSection
+```
+* Create the file `/etc/X11/xorg.conf.d/20-intel.conf` and add the following:
+```
+Section "Device"
+    Identifier  "Intel Graphics"
+    Driver      "modesetting"
+EndSection
+```
+* Several modules need to be blacklisted in order to prevent them from being loaded on boot. Add the following to `/etc/modprobe.d/blacklist.conf`:
+```
+blacklist nouveau
+blacklist rivafb
+blacklist nvidiafb
+blacklist rivatv
+blacklist nv
+blacklist nvidia
+blacklist nvidia-drm
+blacklist nvidia-modeset
+blacklist nvidia-uvm
+```
+If you are using *ipmi*, you need to add more modules. See the link to the Arch forum.
+* Create the file `/etc/modprobe.d/disable-nvidia.conf` and add the following:
+```
+install nvidia /bin/false
 ```
 * If you are using *TLP*, you might need to blacklist the discrete NVIDIA-card by adding/uncommenting the following line in `/etc/default/tlp`:
 ```
 RUNTIME_PM_BLACKLIST="01:00.0"
 ```
 Double-check the address with `lspci`. Similarly, if you are using *powertop*, you might have to disable/blacklist the card there as well.
-
-That should enable the card when running a command with `optirun`:
+* In order to enable and disable the video card create the following 2 scripts:
+#### `enableGPU.sh`
+``` bash
+#!/bin/sh
+# allow to load nvidia module
+mv /etc/modprobe.d/disable-nvidia.conf /etc/modprobe.d/disable-nvidia.conf.disable
+# remove NVIDIA card (currently in power/control = auto)
+echo -n 1 > /sys/bus/pci/devices/0000\:01\:00.0/remove
+sleep 1
+# change PCIe power control
+echo -n on > /sys/bus/pci/devices/0000\:00\:01.0/power/control
+sleep 1
+# rescan for NVIDIA card (defaults to power/control = on)
+echo -n 1 > /sys/bus/pci/rescan
 ```
-$ glxinfo|grep "OpenGL renderer"
+#### `disableGPU.sh`
+``` bash
+modprobe -r nvidia_drm
+modprobe -r nvidia_uvm
+modprobe -r nvidia_modeset
+modprobe -r nvidia
+# change NVIDIA card power control
+echo -n auto > /sys/bus/pci/devices/0000\:01\:00.0/power/control
+sleep 1
+# change PCIe power control
+echo -n auto > /sys/bus/pci/devices/0000\:00\:01.0/power/control
+sleep 1
+# lock system form loading nvidia module
+mv /etc/modprobe.d/disable-nvidia.conf.disable /etc/modprobe.d/disable-nvidia.conf
+```
+* If the video card is not disabled on shutdown, then the modules will be loaded again at next boot even though they are blacklisted. Therefore we need to create a service which shuts down the NVIDIA card at shutdown. Create the file `/etc/systemd/system/disable-nvidia-on-shutdown.service` and add the following:
+``` bash
+[Unit]
+Description=Disables Nvidia GPU on OS shutdown
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/bin/true
+ExecStop=/bin/bash -c "mv /etc/modprobe.d/lock-nvidia.conf.disable /etc/modprobe.d/lock-nvidia.conf || true"
+[Install]
+WantedBy=multi-user.target
+```
+Finally we need to enable the service:
+``` bash
+systemctl daemon-reload
+systemctl enable disable-nvidia-on-shutdown.service
+```
+
+Reboot and doublecheck that the `nvidia`-module is not loaded: `lsmod | grep nvidia`.<br>
+Now you can enable the NVIDIA card by running the aforementioned script and and verify with e.g. `nvidia-smi` that the card is loaded. It should then be possible to run a commend with `optirun`:
+``` bash
+$ glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
-$ optirun glxinfo|grep "OpenGL renderer"
+$ optirun glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: GeForce GTX 1050 Ti with Max-Q Design/PCIe/SSE2
 ```
-It's possible you might have to install additional packages like `libgl1-mesa-glx`.
-
-**Note:** The NVIDIA card is now permanently on, thus drawing some power.
+Disable the card with `disableGPU.sh` to lower the power consumption.
 
 ### Battery
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
