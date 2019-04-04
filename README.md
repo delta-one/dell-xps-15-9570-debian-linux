@@ -8,7 +8,7 @@
 * HDD: 512 GB
 * Video card: NVIDIA® GeForce® GTX 1050 Ti
 * Screen: FHD non-touch
-* WIFI: Killer 1535
+* WIFI: ~~Killer 1535~~ Intel 9260
 * Battery: 97 Whr
 
 ### Before installation
@@ -31,6 +31,17 @@ In case you want to compile your own kernel, you can use [my kernel-configs](ker
 
 If you only want to include those modules that you are really using, run a distro-kernel for a while and simply record all the modules you are using with [modprobed-db](https://github.com/graysky2/modprobed-db) for example. You can then take the distro-configuration and run `make localmodconfig` while proving the module-list from *modprobed-db*.
 
+### Kernel parameters
+The following kernel parameters can be useful:
+
+* `loglevel=2` -- suppresses some error messages
+* `acpi_rev_override=1 acpi_osi=Linux` -- makes some chnages to how ACPI works
+* `mem_sleep_default=deep` -- uses a more efficient suspend mode. However the CPU may get stuck in a high power state after resuming. ***Be careful when using this parameter.***
+* `nouveau.modeset=0 nouveau.runpm=0` -- prevents the Nouveau-driver from managing the Nvidia card and disables the power management
+* `scsi_mod.use_blk_mq=1` -- enables block multiquue for better NVMe performance
+* `pcie_aspm=force` -- enables Active-State Power Management, which sets a lower power state for PCIe links when the devices to which they connect are not in use
+* `drm.vblankoffdelay=1` -- reduces wakeup events and saves minimal power
+
 ### Wifi + Bluetooth
 The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.<br>
 While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The drivers for this card are in the `firmware-iwlwifi`-package. If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, that works with both chipsets. All future kernel-configs will only work with the Intel-chip.
@@ -41,7 +52,7 @@ Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-The integrated Intel-card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
+The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
 * Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
 * Edit `/etc/bumblebee/bumblebee.conf` and set `Driver` to `nvidia` and `PMMethod` to `none` in the `[driver-nvidia]`-section.
@@ -79,7 +90,7 @@ If you are using *ipmi*, you need to add more modules. See the link to the Arch 
 ```
 install nvidia /bin/false
 ```
-* If you are using *TLP*, you might need to blacklist the discrete NVIDIA-card by adding/uncommenting the following line in `/etc/default/tlp`:
+* If you are using *TLP*, you might need to blacklist the discrete NVIDIA card by adding/uncommenting the following line in `/etc/default/tlp`:
 ```
 RUNTIME_PM_BLACKLIST="01:00.0"
 ```
@@ -126,21 +137,29 @@ ExecStop=/bin/bash -c "mv /etc/modprobe.d/lock-nvidia.conf.disable /etc/modprobe
 [Install]
 WantedBy=multi-user.target
 ```
-Finally we need to enable the service:
+* Finally we need to enable the service:
 ``` bash
 systemctl daemon-reload
 systemctl enable disable-nvidia-on-shutdown.service
 ```
 
 Reboot and doublecheck that the `nvidia`-module is not loaded: `lsmod | grep nvidia`.<br>
-Now you can enable the NVIDIA card by running the aforementioned script and and verify with e.g. `nvidia-smi` that the card is loaded. It should then be possible to run a commend with `optirun`:
+Now you can enable the NVIDIA card by running the aforementioned script and and verify with e.g. `nvidia-smi` that the card is loaded. It should then be possible to run a commend with `optirun` :
 ``` bash
 $ glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
+
 $ optirun glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: GeForce GTX 1050 Ti with Max-Q Design/PCIe/SSE2
 ```
 Disable the card with `disableGPU.sh` to lower the power consumption.
+
+#### Various options for the integrated Intel-card
+*tlp* is recommended to save some power. However several more options can be activated for the Intel card. Add the following line to `/etc/modprobe.d/i915.conf` :
+```
+options i915 enable_fbc=1 disable_power_well=0 fastboot=1
+```
+Some guides suggest the option `enable_guc=3`, however my computer got stuck at boot with that option. Before you add it to `/etc/modprobe.d/i915.conf`, try it first as a command-line options before you boot.
 
 ### Battery
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
@@ -189,7 +208,7 @@ set config(t_high)      80
 # thresholds here. In doubt start with low values and gradually rise them
 # until the fans are not always on when the cpu is idle.
 set config(0) {{0 0} -1 55 -1 55}
-set config(1) {{0 1} 50 60 50 60}
+set config(1) {{0 1} 52 60 52 60}
 set config(2) {{1 1} 55 75 55 75}
 set config(3) {{2 2} 70 128 70 128}
 
