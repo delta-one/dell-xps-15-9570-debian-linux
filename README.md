@@ -38,7 +38,7 @@ The following kernel parameters can be useful:
 * `acpi_rev_override=1 acpi_osi=Linux` -- makes some chnages to how ACPI works
 * `mem_sleep_default=deep` -- uses a more efficient suspend mode. However the CPU may get stuck in a high power state after resuming. ***Be careful when using this parameter.***
 * `nouveau.modeset=0 nouveau.runpm=0` -- prevents the Nouveau-driver from managing the Nvidia card and disables the power management
-* `scsi_mod.use_blk_mq=1` -- enables block multiquue for better NVMe performance
+* `scsi_mod.use_blk_mq=1` -- enables block multiqueue for better NVMe performance
 * `pcie_aspm=force` -- enables Active-State Power Management, which sets a lower power state for PCIe links when the devices to which they connect are not in use
 * `drm.vblankoffdelay=1` -- reduces wakeup events and saves minimal power
 
@@ -54,7 +54,7 @@ Suspend works out of the box. Unfortunately there is no indicator, if the comput
 ### Video card
 The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
-* Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver.
+* Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver including `nvidia-smi`.
 * Edit `/etc/bumblebee/bumblebee.conf` and set `Driver` to `nvidia` and `PMMethod` to `none` in the `[driver-nvidia]`-section.
 * Create the file `/etc/tmpfiles.d/nvidia_pm.conf` and add the following to allow the GPU to poweroff on boot:
 ```
@@ -100,7 +100,14 @@ Double-check the address with `lspci`. Similarly, if you are using *powertop*, y
 ``` bash
 #!/bin/sh
 # allow to load nvidia module
+if [ ! -f /etc/modprobe.d/disable-nvidia.conf ]; then
+        printf "File /etc/modprobe.d/disable-nvidia.conf does not exist.\n"
+        printf "Is the GPU already enabled ?\n"
+        exit 1
+fi
+printf "Allowing to load NVIDIA modules..."
 mv /etc/modprobe.d/disable-nvidia.conf /etc/modprobe.d/disable-nvidia.conf.disable
+printf "Changing power control...\n"
 # remove NVIDIA card (currently in power/control = auto)
 echo -n 1 > /sys/bus/pci/devices/0000\:01\:00.0/remove
 sleep 1
@@ -109,13 +116,21 @@ echo -n on > /sys/bus/pci/devices/0000\:00\:01.0/power/control
 sleep 1
 # rescan for NVIDIA card (defaults to power/control = on)
 echo -n 1 > /sys/bus/pci/rescan
+if [ -x "$(command -v nvidia-smi)" ]; then
+        printf "\n"
+        nvidia-smi
+fi
+printf "\nNVIDIA CARD IS NOW ENABLED.\n"
 ```
 #### `disableGPU.sh`
 ``` bash
+#!/bin/sh
+printf "Unloading NVIDIA modules..."
 modprobe -r nvidia_drm
 modprobe -r nvidia_uvm
 modprobe -r nvidia_modeset
 modprobe -r nvidia
+printf "Changing power control...\n"
 # change NVIDIA card power control
 echo -n auto > /sys/bus/pci/devices/0000\:01\:00.0/power/control
 sleep 1
@@ -123,7 +138,13 @@ sleep 1
 echo -n auto > /sys/bus/pci/devices/0000\:00\:01.0/power/control
 sleep 1
 # lock system form loading nvidia module
-mv /etc/modprobe.d/disable-nvidia.conf.disable /etc/modprobe.d/disable-nvidia.conf
+if [ -f /etc/modprobe.d/disable-nvidia.conf.disable ]; then
+        mv /etc/modprobe.d/disable-nvidia.conf.disable /etc/modprobe.d/disable-nvidia.conf
+        printf "\nNVIDIA CARD IS NOW DISABLED.\n"
+else
+        printf "\nFile /etc/modprobe.d/disable-nvidia.conf.disable does not exist.\n"
+        printf "Is the GPU already disabled ?\n"
+fi
 ```
 * If the video card is not disabled on shutdown, then the modules will be loaded again at next boot even though they are blacklisted. Therefore we need to create a service which shuts down the NVIDIA card at shutdown. Create the file `/etc/systemd/system/disable-nvidia-on-shutdown.service` and add the following:
 ``` bash
@@ -144,7 +165,7 @@ systemctl enable disable-nvidia-on-shutdown.service
 ```
 
 Reboot and doublecheck that the `nvidia`-module is not loaded: `lsmod | grep nvidia`.<br>
-Now you can enable the NVIDIA card by running the aforementioned script and and verify with e.g. `nvidia-smi` that the card is loaded. It should then be possible to run a commend with `optirun` :
+Now you can enable the NVIDIA card by running the aforementioned script. If you did not install `nvidia-smi`, then you might need to verify manually if the GPU is loaded. Finally you can run a command with `optirun` :
 ``` bash
 $ glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
@@ -159,7 +180,7 @@ Disable the card with `disableGPU.sh` to lower the power consumption.
 ```
 options i915 enable_fbc=1 disable_power_well=0 fastboot=1
 ```
-Some guides suggest the option `enable_guc=3`, however my computer got stuck at boot with that option. Before you add it to `/etc/modprobe.d/i915.conf`, try it first as a command-line options before you boot.
+Some guides suggest the option `enable_guc=3`, however my computer got stuck at boot with that option. Before you add it to `/etc/modprobe.d/i915.conf`, try it first as a command-line option before you boot.
 
 ### Battery
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
@@ -245,4 +266,4 @@ Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
 
 
 ### Undervolting
-[Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.150V for the CPU and -0.100V for the GPU.
+[Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.175V for the CPU and -0.100V for the GPU.
