@@ -193,7 +193,7 @@ This might again depend on your DE. In KDE Plasma the keys for volume, brightnes
 **Tip:** `Fn+Insert` puts the computer in suspend-mode. `Fn+F7` turns off the screen and mutes the computer (though that option has to be activated in the BIOS).
 
 ### Fan control
-**INFO: This does not work with BIOS 1.7.0 or higher, since the BIOS fan control cannot be overriden at the moment. You need to stay on BIOS 1.6.0 or lower, if you want this kind of custom fan control.**
+**INFO: This does not work with BIOS 1.7.0 or 1.8.1, but works again with BIOS 1.9.1.**
 
 The BIOS fan control is a bit too trigger-happy for my taste, i.e. the fan is running too often at low temperatures. Luckily you can set up your own fan control though it requires some configuration:
 
@@ -254,6 +254,7 @@ There are 2 ways to update the BIOS:
 2. Format a USB-drive with FAT32, download and copy the BIOS-file from the [Dell support page](https://www.dell.com/support/home/us/en/19/product-support/product/xps-15-9570-laptop/drivers) (`XPS_9570...exe`) onto the USB-drive and reboot your computer. Press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
 
 Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
+* [1.9.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=wghf7)
 * [1.8.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=n61vd)
 * [1.7.0](https://www.dell.com/support/home/us/en/19/drivers/driversdetails?driverId=1WN0H)
 * [1.6.0](https://www.dell.com/support/home/us/en/19/drivers/driversdetails?driverId=DDNHT)
@@ -263,6 +264,8 @@ Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
 * [1.3.0](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=9d1j8)
 * [1.2.2](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=rvxyr)
 * [1.1.4](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=r8d1d)
+* [1.0.5](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=tty8p)
+* [1.0.0](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=312d7)
 
 
 ### Undervolting
