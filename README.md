@@ -18,7 +18,7 @@
 * Change Fastboot to `Thorough` in *POST Behaviour*.
 
 ### Installation
-If you need Wifi during installtion, you need to grab an image with non-free firmware, since the official Debian-image doesn't contain the driver for the Killer 1535-chip (or maybe another chip if you have switched). During the installation the installer will complain about missing files for the Wifi-firmware, but this warning can be ignored.
+If you need Wifi during installtion, you need to grab an image with non-free firmware, since the official Debian-image doesn't contain the driver for the Killer 1535-chip (or maybe another chip if you have switched). During the installation the installer may complain about missing files for the Wifi-firmware, but this warning can be ignored.
 
 ### After installation
 If you run into CPU lockups when e.g. running `lspci` or when your computer won't restart/successfully logout, you can add the kernel parameter `nouveau.modeset=0`, which should fix these issues.
@@ -52,10 +52,10 @@ Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably several different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
+The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
 * Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver including `nvidia-smi`.
-* Edit `/etc/bumblebee/bumblebee.conf` and set `Driver` to `nvidia` and `PMMethod` to `none` in the `[driver-nvidia]`-section.
+* Edit `/etc/bumblebee/bumblebee.conf` by setting `Driver` to `nvidia` and `PMMethod` to `none` in the `[driver-nvidia]`-section.
 * Create the file `/etc/tmpfiles.d/nvidia_pm.conf` and add the following to allow the GPU to poweroff on boot:
 ```
 w /sys/bus/pci/devices/0000:01:00.0/power/control - - - - auto
@@ -63,14 +63,14 @@ w /sys/bus/pci/devices/0000:01:00.0/power/control - - - - auto
 * Create the file `/etc/X11/xorg.conf.d/01-noautogpu.conf` and add the following:
 ```
 Section "ServerFlags"
-    Option "AutoAddGPU" "off"
+	Option "AutoAddGPU" "off"
 EndSection
 ```
 * Create the file `/etc/X11/xorg.conf.d/20-intel.conf` and add the following:
 ```
 Section "Device"
-    Identifier  "Intel Graphics"
-    Driver      "modesetting"
+	Identifier  "Intel Graphics"
+	Driver      "modesetting"
 EndSection
 ```
 * Several modules need to be blacklisted in order to prevent them from being loaded on boot. Add the following to `/etc/modprobe.d/blacklist.conf`:
@@ -87,7 +87,7 @@ blacklist nvidia-uvm
 ```
 If you are using *ipmi*, you need to add more modules. See the link to the Arch forum.
 * Create the file `/etc/modprobe.d/disable-nvidia.conf` and add the following:
-```
+``` bash
 install nvidia /bin/false
 ```
 * If you are using *TLP*, you might need to blacklist the discrete NVIDIA card by adding/uncommenting the following line in `/etc/default/tlp`:
@@ -101,9 +101,9 @@ Double-check the address with `lspci`. Similarly, if you are using *powertop*, y
 #!/bin/sh
 # allow to load nvidia module
 if [ ! -f /etc/modprobe.d/disable-nvidia.conf ]; then
-        printf "File /etc/modprobe.d/disable-nvidia.conf does not exist.\n"
-        printf "Is the GPU already enabled ?\n"
-        exit 1
+	printf "File /etc/modprobe.d/disable-nvidia.conf does not exist.\n"
+	printf "Is the GPU already enabled ?\n"
+	exit 1
 fi
 printf "Allowing to load NVIDIA modules..."
 mv /etc/modprobe.d/disable-nvidia.conf /etc/modprobe.d/disable-nvidia.conf.disable
@@ -117,8 +117,8 @@ sleep 1
 # rescan for NVIDIA card (defaults to power/control = on)
 echo -n 1 > /sys/bus/pci/rescan
 if [ -x "$(command -v nvidia-smi)" ]; then
-        printf "\n"
-        nvidia-smi
+	printf "\n"
+	nvidia-smi
 fi
 printf "\nNVIDIA CARD IS NOW ENABLED.\n"
 ```
@@ -139,11 +139,11 @@ echo -n auto > /sys/bus/pci/devices/0000\:00\:01.0/power/control
 sleep 1
 # lock system form loading nvidia module
 if [ -f /etc/modprobe.d/disable-nvidia.conf.disable ]; then
-        mv /etc/modprobe.d/disable-nvidia.conf.disable /etc/modprobe.d/disable-nvidia.conf
-        printf "\nNVIDIA CARD IS NOW DISABLED.\n"
+	mv /etc/modprobe.d/disable-nvidia.conf.disable /etc/modprobe.d/disable-nvidia.conf
+	printf "\nNVIDIA CARD IS NOW DISABLED.\n"
 else
-        printf "\nFile /etc/modprobe.d/disable-nvidia.conf.disable does not exist.\n"
-        printf "Is the GPU already disabled ?\n"
+	printf "\nFile /etc/modprobe.d/disable-nvidia.conf.disable does not exist.\n"
+	printf "Is the GPU already disabled ?\n"
 fi
 ```
 * If the video card is not disabled on shutdown, then the modules will be loaded again at next boot even though they are blacklisted. Therefore we need to create a service which shuts down the NVIDIA card at shutdown. Create the file `/etc/systemd/system/disable-nvidia-on-shutdown.service` and add the following:
