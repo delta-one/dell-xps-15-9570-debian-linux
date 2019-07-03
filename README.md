@@ -254,6 +254,7 @@ There are 2 ways to update the BIOS:
 2. Download the BIOS-file from the [Dell support page](https://www.dell.com/support/home/us/en/19/product-support/product/xps-15-9570-laptop/drivers) (`XPS_9570...exe`) and copy it into `/boot/efi/EFI/Dell/Bios` (the path may vary slightly). Reboot, press `F12`, choose `BIOS Flash Update` and then choose the downloaded file to start the update.
 
 Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
+* [1.11.2](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=m6ffy)
 * [1.10.1](https://www.dell.com/support/home/us/en/19/drivers/driversdetails?driverid=kkwch)
 * [1.9.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=wghf7)
 * [1.8.1](https://www.dell.com/support/home/us/en/04/drivers/driversdetails?driverid=n61vd)
