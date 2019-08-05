@@ -1,6 +1,6 @@
 # Debian Linux on the Dell XPS 15 9570
 
-***Disclaimer:*** *I'm using Debian Unstable, so some aspects might not apply to your distribution.*
+***Disclaimer:*** *I'm using Debian Testing [as of August 2019], so some aspects might not apply to your distribution.*
 
 ### Configuration
 * CPU: Intel® Core™ i7-8750H
@@ -16,6 +16,8 @@
 * Disable *Secure Boot* to allow Linux to boot.
 * Change the SATA Mode to `AHCI` to allow Linux to detect the NVMe SSD.
 * Change Fastboot to `Thorough` in *POST Behaviour*.
+
+Debian has support for Secure Boot and you can install Debian with Secure Boot enabled. However Secure Boot has certain limitations and might require to be disabled. For details, see the [Debian Wiki](https://wiki.debian.org/SecureBoot).
 
 ### Installation
 If you need Wifi during installtion, you need to grab an image with non-free firmware, since the official Debian-image doesn't contain the driver for the Killer 1535-chip (or maybe another chip if you have switched). During the installation the installer may complain about missing files for the Wifi-firmware, but this warning can be ignored.
@@ -54,8 +56,8 @@ Suspend works out of the box. Unfortunately there is no indicator, if the comput
 ### Video card
 The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
-* Install `bumblebee-nvidia` for the proprietary NVIDIA-driver as well as the proprietary NVIDIA-driver including `nvidia-smi`.
-* Edit `/etc/bumblebee/bumblebee.conf` by setting `Driver` to `nvidia` and `PMMethod` to `none` in the `[driver-nvidia]`-section.
+* Install `primus` and `bumblebee-nvidia`.
+* Edit `/etc/bumblebee/bumblebee.conf` by setting `Driver` to `nvidia` and in the `[driver-nvidia]`-section `PMMethod` to `none`.
 * Create the file `/etc/tmpfiles.d/nvidia_pm.conf` and add the following to allow the GPU to poweroff on boot:
 ```
 w /sys/bus/pci/devices/0000:01:00.0/power/control - - - - auto
@@ -105,7 +107,7 @@ if [ ! -f /etc/modprobe.d/disable-nvidia.conf ]; then
 	printf "Is the GPU already enabled ?\n"
 	exit 1
 fi
-printf "Allowing to load NVIDIA modules..."
+printf "Allowing to load NVIDIA modules...\n"
 mv /etc/modprobe.d/disable-nvidia.conf /etc/modprobe.d/disable-nvidia.conf.disable
 printf "Changing power control...\n"
 # remove NVIDIA card (currently in power/control = auto)
@@ -125,7 +127,7 @@ printf "\nNVIDIA CARD IS NOW ENABLED.\n"
 #### `disableGPU.sh`
 ``` bash
 #!/bin/sh
-printf "Unloading NVIDIA modules..."
+printf "Unloading NVIDIA modules...\n"
 modprobe -r nvidia_drm
 modprobe -r nvidia_uvm
 modprobe -r nvidia_modeset
@@ -161,11 +163,11 @@ WantedBy=multi-user.target
 * Finally we need to enable the service:
 ``` bash
 systemctl daemon-reload
-systemctl enable disable-nvidia-on-shutdown.service
+systemctl enable disable-nvidia-on-shutdown
 ```
 
 Reboot and doublecheck that the `nvidia`-module is not loaded: `lsmod | grep nvidia`.<br>
-Now you can enable the NVIDIA card by running the aforementioned script. If you did not install `nvidia-smi`, then you might need to verify manually if the GPU is loaded. Finally you can run a command with `optirun` :
+Now you can enable the NVIDIA card by running the aforementioned script. If you did install `nvidia-smi`, then the script will verify if the Nvidia card is enabled. Otherwise you will have to do so manually if you wish. Finally you can run a command with `optirun` :
 ``` bash
 $ glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
