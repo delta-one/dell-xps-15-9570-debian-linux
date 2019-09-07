@@ -54,6 +54,8 @@ Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
+**Note:** NVIDIA-driver 430.40 has a bug, when prevents Bumblebee from disabling the discrete video card, see [#939505](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=939505). A temporary solution is to stay on 418.88 or to downgrade to 418.88.
+
 The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
 * Install `primus` and `bumblebee-nvidia`.
