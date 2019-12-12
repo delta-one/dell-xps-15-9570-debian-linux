@@ -45,8 +45,10 @@ The following kernel parameters can be useful:
 * `drm.vblankoffdelay=1` -- reduces wakeup events and saves minimal power
 
 ### Wifi + Bluetooth
+**Note:** The latest firmware-package for the Intel-chip (`firmware-iwlwifi_20190717-2`) unfortunately borks the Wifi to a degree. I've got some errors and a drastically reduced upload-speed. A solution is described [here](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=940813) (just replace `9000` in the filename with `9260` or whatever chip you are using). Renaming the file has solved my Wifi-issues.
+
 The drivers needed for the Killer 1535-chip are in the `firmware-atheros`-package, which should be installed if you used an image with non-free firmware. Bluetooth should be working out of the box.<br>
-While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The drivers for this card are in the `firmware-iwlwifi`-package. If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, that works with both chipsets. All future kernel-configs will only work with the Intel-chip.
+While the speed of the Killer-chip was nothing to complain about, I saw a lot of connection drops and switched the chip with an Intel 9260-card. The drivers for this card are in the `firmware-iwlwifi`-package. If you run the distribution-kernel, you are fine and the new card should then work out of the box. If you run a custom kernel, you need to add a couple of modules (see my [my kernel-configs](kernel-config) for details). `config-4.18.0-rc6-pfd1-nouveau-killer-intel` is my last config, which works with both chipsets. All future kernel-configs will only work with the Intel-chip.
 
 ### Power Management
 Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need to stay on BIOS 1.2.2.
