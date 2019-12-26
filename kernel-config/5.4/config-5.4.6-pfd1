@@ -1,10 +1,10 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.4.0 Kernel Configuration
+# Linux/x86 5.4.6 Kernel Configuration
 #
 
 #
-# Compiler: gcc (Debian 9.2.1-19) 9.2.1 20191109
+# Compiler: gcc (Debian 9.2.1-21) 9.2.1 20191130
 #
 CONFIG_CC_IS_GCC=y
 CONFIG_GCC_VERSION=90201
@@ -1966,6 +1966,7 @@ CONFIG_WLAN=y
 # CONFIG_WIRELESS_WDS is not set
 CONFIG_WLAN_VENDOR_ADMTEK=y
 # CONFIG_ADM8211 is not set
+CONFIG_ATH_COMMON=m
 CONFIG_WLAN_VENDOR_ATH=y
 # CONFIG_ATH_DEBUG is not set
 # CONFIG_ATH5K is not set
@@ -1976,7 +1977,14 @@ CONFIG_ATH5K_PCI=y
 # CONFIG_ATH6KL is not set
 # CONFIG_AR5523 is not set
 # CONFIG_WIL6210 is not set
-# CONFIG_ATH10K is not set
+CONFIG_ATH10K=m
+CONFIG_ATH10K_CE=y
+CONFIG_ATH10K_PCI=m
+# CONFIG_ATH10K_SDIO is not set
+# CONFIG_ATH10K_USB is not set
+# CONFIG_ATH10K_DEBUG is not set
+# CONFIG_ATH10K_DEBUGFS is not set
+# CONFIG_ATH10K_TRACING is not set
 # CONFIG_WCN36XX is not set
 CONFIG_WLAN_VENDOR_ATMEL=y
 # CONFIG_ATMEL is not set
