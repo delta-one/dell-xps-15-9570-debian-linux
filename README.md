@@ -26,10 +26,8 @@ If you need Wifi during installtion, you need to grab an image with non-free fir
 If you run into CPU lockups when e.g. running `lspci` or when your computer won't restart/successfully logout, you can add the kernel parameter `nouveau.modeset=0`, which should fix these issues.
 
 ### Kernel
-**Note:** ~~Kernel 5.0 causes a black flickering screen on the internal display of the 9570 at the moment. External monitors work fine. A (temporary) solution is mentioned [here](https://bugs.freedesktop.org/show_bug.cgi?id=109959) and resolves the problem.~~ (Fixed in 5.0.8.)
-
 In case you want to compile your own kernel, you can use [my kernel-configs](kernel-config) as a base. Depending on what you do, you might have to adjust the configs slightly, but they should provide a working base-configuration and can be used with the [vanilla kernel-sources](https://www.kernel.org/). <br>
-**Note:** I have switched the Wifi-chip from the Killer 1535 to an Intel 9260-chip and I'm not using the Nouveau driver, but the proprietary one from NVIDIA.
+**Note:** The configs work with both the Killer 1535-chip and the Intel 9260-chip. I'm also not using the Nouveau driver, but the proprietary one from NVIDIA.
 
 If you only want to include those modules that you are really using, run a distro-kernel for a while and simply record all the modules you are using with [modprobed-db](https://github.com/graysky2/modprobed-db) for example. You can then take the distro-configuration and run `make localmodconfig` while proving the module-list from *modprobed-db*.
 
