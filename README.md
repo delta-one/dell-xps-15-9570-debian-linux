@@ -255,7 +255,7 @@ set config(3) {{2 2} 70 128 70 128}
 7. Start the `i8k`-daemon with `sudo service i8kmon start` and enjoy more silence.
 
 ### Sound
-Sound should work out of the box. I haven't really tested the microphone yet though.
+Sound should work out of the box incl. the internal microphone. Recording audio via the microphone of a headset also works out of the box, though it might require mixer adjustments.
 
 ### BIOS update
 There are 2 ways to update the BIOS:
