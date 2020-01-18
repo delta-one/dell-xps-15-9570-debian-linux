@@ -48,7 +48,7 @@ While the speed of the Killer-chip was nothing to complain about, I saw a lot of
 However, the latest firmware-package available in Debian for the Intel-chip (`firmware-iwlwifi_20190717-2`) unfortunately borks the Wifi completely (Wifi crashes completely + significant speed-loss). Fixes mentioned [here](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=940813) provide no more than a short temporary fix, so I went back to the Killer-chip. So far the connection seems stable and I haven't had the dropd I had earlier. All kernel-configs from 5.4.6 on will work with both the Killer 1535-chip and the Intel 9260-chip.
 
 ### Power Management
-Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need to stay on BIOS 1.2.2.
+Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need to stay on BIOS 1.2.2, though I find the current standby-state does its job well enough.
 
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
@@ -64,8 +64,13 @@ Then you can run an application with the dedicated card with `optimus $COMMAND` 
 
 The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
-* Install `primus` and `bumblebee-nvidia`.
-* Edit `/etc/bumblebee/bumblebee.conf` by setting `Driver` to `nvidia` and in the `[driver-nvidia]`-section `PMMethod` to `none`.
+* Install `primus-libs` and `bumblebee-nvidia`.
+* Edit `/etc/bumblebee/bumblebee.conf` in the `[driver-nvidia]`-section:
+```
+[driver-nvidia]
+KernelDriver=nvidia
+PMMethod=none
+```
 * Create the file `/etc/tmpfiles.d/nvidia_pm.conf` and add the following to allow the GPU to poweroff on boot:
 ```
 w /sys/bus/pci/devices/0000:01:00.0/power/control - - - - auto
@@ -239,7 +244,7 @@ set config(t_high)      80
 # thresholds here. In doubt start with low values and gradually rise them
 # until the fans are not always on when the cpu is idle.
 set config(0) {{0 0} -1 55 -1 55}
-set config(1) {{0 1} 52 60 52 60}
+set config(1) {{1 0} 50 60 50 60}
 set config(2) {{1 1} 55 75 55 75}
 set config(3) {{2 2} 70 128 70 128}
 
@@ -285,4 +290,4 @@ Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
 
 
 ### Undervolting
-[Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.175V for the CPU and -0.100V for the GPU.
+[Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.150V for the CPU and -0.100V for the GPU.
