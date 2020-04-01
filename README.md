@@ -262,6 +262,9 @@ set config(3) {{2 2} 70 128 70 128}
 ### Sound
 Sound should work out of the box incl. the internal microphone. Recording audio via the microphone of a headset also works out of the box, though it might require mixer adjustments.
 
+### Card Reader
+The SD-card reader should work out of the box. The device will be `/dev/mmcblk0` and the partitions are called `/dev/mmcblk0p1` and so on. They can then be mounted as usual.
+
 ### BIOS update
 There are 2 ways to update the BIOS:
 
