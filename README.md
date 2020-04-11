@@ -53,18 +53,10 @@ Dell removed the S3 sleep-state with BIOS 1.3.0. If you want to use S3, you need
 Suspend works out of the box. Unfortunately there is no indicator, if the computer is in suspend-mode.
 
 ### Video card
-**Note:** ~~NVIDIA-driver 430.40 has a bug, when prevents Bumblebee from disabling the discrete video card, see [#939505](https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=939505). A temporary solution is to stay on 418.88 or to downgrade to 418.88.~~
-**EDIT:** It works again with the NVIDIA-driver 430.64-4. However this will uninstall the package `primus` and commands cannot be run anymore with `optirun` as libraries will be missing. Luckily this issue is quite easy to mitigate. Create the following alias:
-```
-alias optimus="PRIMUS_libGLa=/usr/lib/x86_64-linux-gnu/nvidia/current/libGLX_nvidia.so.0 PRIMUS_libGLd=/usr/lib/x86_64-linux-gnu/libGL.so.1 LD_LIBRARY_PATH=/usr/lib/x86_64-linux-gnu/primus"
-```
-Then you can run an application with the dedicated card with `optimus $COMMAND` again.
-
-----
-
 The integrated Intel card works out of the box - a bit trickier was the installation of [bumblebee](https://wiki.debian.org/Bumblebee) for the discrete NVIDIA card. I managed to get it working with the proprietary NVIDIA-driver and there are probably different ways to get it working, but the following worked for me. Credit goes to the people on the [Arch forum](https://bbs.archlinux.org/viewtopic.php?pid=1826641#p1826641).
 
-* Install `primus-libs` and `bumblebee-nvidia`.
+* Install the following packages: `apt install bumblebee-nvidia primus-nvidia nvidia-smi` (This should pull all necessary packages. The packgae `nvidia-smi` is not necessarily needed, but used in the script to enable to NVIDIA card.)
+* Add your user to the `bumblebee`-group: `usermod -a -G bumblebee YOURUSERNAME`
 * Edit `/etc/bumblebee/bumblebee.conf` in the `[driver-nvidia]`-section:
 ```
 [driver-nvidia]
@@ -99,8 +91,9 @@ blacklist nvidia
 blacklist nvidia-drm
 blacklist nvidia-modeset
 blacklist nvidia-uvm
+blacklist ipmi_msghandler
+blacklist ipmi_devintf
 ```
-If you are using *ipmi*, you need to add more modules. See the link to the Arch forum.
 * Create the file `/etc/modprobe.d/disable-nvidia.conf` and add the following:
 ``` bash
 install nvidia /bin/false
@@ -178,9 +171,10 @@ WantedBy=multi-user.target
 systemctl daemon-reload
 systemctl enable disable-nvidia-on-shutdown
 ```
+* Reboot.
 
-Reboot and doublecheck that the `nvidia`-module is not loaded: `lsmod | grep nvidia`.<br>
-Now you can enable the NVIDIA card by running the aforementioned script. If you did install `nvidia-smi`, then the script will verify if the Nvidia card is enabled. Otherwise you will have to do so manually if you wish. Finally you can run a command with `optirun` :
+After rebooting, doublecheck that the `nvidia`-module is not loaded: `lsmod | grep nvidia`.<br>
+Now you can enable the NVIDIA card by running the aforementioned script `enableGPU.sh`. If you did install `nvidia-smi`, then the script will verify if the Nvidia card is enabled. Otherwise you will have to do so manually if you wish. Finally you can run a command with `optirun` :
 ``` bash
 $ glxinfo | grep "OpenGL renderer"
 OpenGL renderer string: Mesa DRI Intel(R) UHD Graphics 630 (Coffeelake 3x8 GT2)
@@ -201,10 +195,10 @@ Some guides suggest the option `enable_guc=3`, however my computer got stuck at 
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
 
 ### Touchpad
-The touchpad should work out of the box. Which one of the packages `xserver-xorg-input-libinput` and `xserver-xorg-input-synaptics` you need (or possibly both), might depend on your desktop environment. Configuring the touchpad also depends on your DE. In KDE Plasma the touchpad can be configured in the system-settings (mouse-click emulation, gestures, multitouch etc.).
+The touchpad should work out of the box. Depending on how much you want to configure your touchpad, you might need to install additional packages like xserver-xorg-input-multitouch` or xserver-xorg-input-synaptics`.
 
 ### Fn-keys
-This might again depend on your DE. In KDE Plasma the keys for volume, brightness, search and screen worked out of the box, whereas I had to configure the music-player keys in the settings.<br>
+This might depend on your desktop environment. In KDE Plasma the keys for volume, brightness, search and screen worked out of the box, whereas I had to configure the music-player keys in the settings.<br>
 **Tip:** `Fn+Insert` puts the computer in suspend-mode. `Fn+F7` turns off the screen and mutes the computer (though that option has to be activated in the BIOS).
 
 ### Fan control
