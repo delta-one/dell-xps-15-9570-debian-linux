@@ -1,6 +1,6 @@
 # Debian Linux on the Dell XPS 15 9570
 
-***Disclaimer:*** *I'm using Debian Testing [as of August 2019], so some aspects might not apply to your distribution.*
+***Disclaimer:*** *I'm using Debian Testing [as of April 2020], so some aspects might not apply to your distribution.*
 
 ### Configuration
 * CPU: Intel® Core™ i7-8750H
@@ -185,9 +185,9 @@ OpenGL renderer string: GeForce GTX 1050 Ti with Max-Q Design/PCIe/SSE2
 Disable the card with `disableGPU.sh` to lower the power consumption.
 
 #### Various options for the integrated Intel-card
-*tlp* is recommended to save some power. However several more options can be activated for the Intel card. Add the following line to `/etc/modprobe.d/i915.conf` :
+*tlp* is recommended to save some power. However several more options can be activated for the Intel card in order to save power or prevent screen flickering. Add the following line to `/etc/modprobe.d/i915.conf` :
 ```
-options i915 enable_fbc=1 disable_power_well=0 fastboot=1
+options i915 enable_fbc=1 disable_power_well=0 fastboot=1 enable_psr=0
 ```
 Some guides suggest the option `enable_guc=3`, however my computer got stuck at boot with that option. Before you add it to `/etc/modprobe.d/i915.conf`, try it first as a command-line option before you boot.
 
