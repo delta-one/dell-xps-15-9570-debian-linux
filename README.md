@@ -195,7 +195,7 @@ Some guides suggest the option `enable_guc=3`, however my computer got stuck at 
 My battery initially showed a capacity of 87 Whr. Draining the battery completely until the computer shuts down automatically and then fully recharging it a couple of times (as [suggested by Dell](https://dell.to/2JJejor)) increased the capacity to 91.5 Whr.
 
 ### Touchpad
-The touchpad should work out of the box. Depending on how much you want to configure your touchpad, you might need to install additional packages like xserver-xorg-input-multitouch` or xserver-xorg-input-synaptics`.
+The touchpad should work out of the box. Depending on how much you want to configure your touchpad, you might need to install additional packages like `xserver-xorg-input-multitouch` or `xserver-xorg-input-synaptics`.
 
 ### Fn-keys
 This might depend on your desktop environment. In KDE Plasma the keys for volume, brightness, search and screen worked out of the box, whereas I had to configure the music-player keys in the settings.<br>
