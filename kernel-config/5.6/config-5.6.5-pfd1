@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.6.4 Kernel Configuration
+# Linux/x86 5.6.5 Kernel Configuration
 #
 
 #
@@ -1562,6 +1562,7 @@ CONFIG_PNPACPI=y
 CONFIG_BLK_DEV=y
 # CONFIG_BLK_DEV_NULL_BLK is not set
 # CONFIG_BLK_DEV_FD is not set
+CONFIG_CDROM=m
 # CONFIG_BLK_DEV_PCIESSD_MTIP32XX is not set
 # CONFIG_BLK_DEV_UMEM is not set
 CONFIG_BLK_DEV_LOOP=m
@@ -1679,7 +1680,8 @@ CONFIG_SCSI_DMA=y
 #
 CONFIG_BLK_DEV_SD=m
 # CONFIG_CHR_DEV_ST is not set
-# CONFIG_BLK_DEV_SR is not set
+CONFIG_BLK_DEV_SR=m
+CONFIG_BLK_DEV_SR_VENDOR=y
 CONFIG_CHR_DEV_SG=m
 # CONFIG_CHR_DEV_SCH is not set
 CONFIG_SCSI_CONSTANTS=y
@@ -4982,7 +4984,9 @@ CONFIG_FUSE_FS=m
 #
 # CD-ROM/DVD Filesystems
 #
-# CONFIG_ISO9660_FS is not set
+CONFIG_ISO9660_FS=m
+# CONFIG_JOLIET is not set
+# CONFIG_ZISOFS is not set
 # CONFIG_UDF_FS is not set
 # end of CD-ROM/DVD Filesystems
 
