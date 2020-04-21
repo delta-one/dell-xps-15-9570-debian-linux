@@ -1,6 +1,6 @@
 #
 # Automatically generated file; DO NOT EDIT.
-# Linux/x86 5.6.5 Kernel Configuration
+# Linux/x86 5.6.6 Kernel Configuration
 #
 
 #
@@ -4985,9 +4985,9 @@ CONFIG_FUSE_FS=m
 # CD-ROM/DVD Filesystems
 #
 CONFIG_ISO9660_FS=m
-# CONFIG_JOLIET is not set
-# CONFIG_ZISOFS is not set
-# CONFIG_UDF_FS is not set
+CONFIG_JOLIET=y
+CONFIG_ZISOFS=y
+CONFIG_UDF_FS=m
 # end of CD-ROM/DVD Filesystems
 
 #
@@ -5484,7 +5484,7 @@ CONFIG_ARCH_HAS_FAST_MULTIPLIER=y
 # CONFIG_CRC_CCITT is not set
 CONFIG_CRC16=m
 CONFIG_CRC_T10DIF=y
-# CONFIG_CRC_ITU_T is not set
+CONFIG_CRC_ITU_T=m
 CONFIG_CRC32=y
 # CONFIG_CRC32_SELFTEST is not set
 CONFIG_CRC32_SLICEBY8=y
