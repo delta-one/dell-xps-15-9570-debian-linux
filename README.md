@@ -36,7 +36,7 @@ The following kernel parameters can be useful:
 
 * `loglevel=2` -- suppresses some error messages
 * `acpi_rev_override=1 acpi_osi=Linux` -- makes some chnages to how ACPI works
-* `mem_sleep_default=deep` -- uses a more efficient suspend mode. However the CPU may get stuck in a high power state after resuming. ***Be careful when using this parameter.***
+* `mem_sleep_default=deep` -- uses a more efficient suspend mode. However the CPU may get stuck in a high power state after resuming. Clicking the touchpad after resuming should pull the CPU out of this state as described [here](https://www.dell.com/community/Precision-Mobile-Workstations/High-load-heating-up-fan-noise-after-S3-suspend-and-resume-on/td-p/7441933).
 * `nouveau.modeset=0 nouveau.runpm=0` -- prevents the Nouveau-driver from managing the Nvidia card and disables the power management
 * `scsi_mod.use_blk_mq=1` -- enables block multiqueue for better NVMe performance
 * `pcie_aspm=force` -- enables Active-State Power Management, which sets a lower power state for PCIe links when the devices to which they connect are not in use
