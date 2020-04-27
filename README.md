@@ -162,7 +162,7 @@ Description=Disables Nvidia GPU on OS shutdown
 Type=oneshot
 RemainAfterExit=true
 ExecStart=/bin/true
-ExecStop=/bin/bash -c "mv /etc/modprobe.d/lock-nvidia.conf.disable /etc/modprobe.d/lock-nvidia.conf || true"
+ExecStop=/bin/bash -c "mv /etc/modprobe.d/disable-nvidia.conf.disable /etc/modprobe.d/disable-nvidia.conf || true"
 [Install]
 WantedBy=multi-user.target
 ```
