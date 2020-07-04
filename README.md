@@ -288,4 +288,4 @@ Here is a (non-comprehensive) list of BIOS-versions for the XPS 15:
 
 
 ### Undervolting
-[Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.150V for the CPU and -0.100V for the GPU.
+[Tests have shown](https://www.notebookcheck.net/Dell-XPS-15-9570-i7-UHD-GTX-1050-Ti-Max-Q-Laptop-Review.332758.0.html#toc-performance), that the Intel® Core™ i7-8750H can be undervolted to gain up to 15% more performance under heavy workloads. Under Linux a tool that can undervolt Intel CPUs is [intel-undervolt](https://github.com/kitsunyan/intel-undervolt). My XPS seems to be running stable at -0.150V for the CPU.
